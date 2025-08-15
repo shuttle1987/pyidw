@@ -12,6 +12,7 @@ dependencies = [
     "geopandas>=1.1.1",
     "numpy>=2.3.2",
     "rasterio>=1.4.3",
+    "scikit-learn>=1.7.1",
 ]
 
 [build-system]
