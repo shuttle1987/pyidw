@@ -49,45 +49,44 @@ def show_map(input_raster='', colormap='coolwarm', image_size=1.5, return_figure
 def crop_resize(input_raster_filename='',
                 extent_shapefile_name='',
                 max_height_or_width=250):
-    # Here, co-variable raster file (elevation in this case) is croped and resized using rasterio.
+    # Here, co-variable raster file (elevation in this case) is cropped and resized using rasterio.
     BD = gpd.read_file(extent_shapefile_name)
     elevation = rasterio.open(input_raster_filename)
 
     # Using mask method from rasterio.mask to clip study area from larger elevation file.
-    croped_data, croped_transform = mask(dataset=elevation,
+    cropped_data, cropped_transform = mask(dataset=elevation,
                                          shapes=BD.geometry,
                                          crop=True,
                                          all_touched=True)
-    croped_meta = elevation.meta
-    croped_meta.update({
-        'height': croped_data.shape[-2],
-        'width': croped_data.shape[-1],
-        'transform': croped_transform
+    cropped_meta = elevation.meta
+    cropped_meta.update({
+        'height': cropped_data.shape[-2],
+        'width': cropped_data.shape[-1],
+        'transform': cropped_transform
     })
 
-    croped_filename = input_raster_filename.rsplit('.', 1)[0] + '_croped.tif'
-    with rasterio.open(croped_filename, 'w', **croped_meta) as croped_file:
-        croped_file.write(croped_data)  # Save the croped file as croped_elevation.tif to working directory.
+    cropped_filename = input_raster_filename.rsplit('.', 1)[0] + '_cropped.tif'
+    with rasterio.open(cropped_filename, 'w', **cropped_meta) as cropped_file:
+        cropped_file.write(cropped_data)  # Save the cropped file as cropped_elevation.tif to working directory.
 
     # Calculate resampling factor for resizing the elevation file, this is done to reduce calculation time.
-    # Here 250 is choosed for optimal result, it can be more or less depending on users desire.
-    # max_height_or_width = 250
-    resampling_factor = max_height_or_width / max(rasterio.open(croped_filename).shape)
+    # The default value of 250 is chosen for optimal result, it can be more or less depending on users desire.
+    resampling_factor = max_height_or_width / max(rasterio.open(cropped_filename).shape)
 
-    # Reshape/resize the croped elevation file and save it to working directory.
-    with rasterio.open(croped_filename, 'r') as croped_elevation:
+    # Reshape/resize the cropped elevation file and save it to working directory.
+    with rasterio.open(cropped_filename, 'r') as cropped_elevation:
 
-        resampled_elevation = croped_elevation.read(
-            out_shape=(croped_elevation.count,
-                       int(croped_elevation.height * resampling_factor),
-                       int(croped_elevation.width * resampling_factor)),
+        resampled_elevation = cropped_elevation.read(
+            out_shape=(cropped_elevation.count,
+                       int(cropped_elevation.height * resampling_factor),
+                       int(cropped_elevation.width * resampling_factor)),
             resampling=Resampling.bilinear)
 
-        resampled_transform = croped_elevation.transform * croped_elevation.transform.scale(
-            croped_elevation.width / resampled_elevation.shape[-1],
-            croped_elevation.height / resampled_elevation.shape[-2])
+        resampled_transform = cropped_elevation.transform * cropped_elevation.transform.scale(
+            cropped_elevation.width / resampled_elevation.shape[-1],
+            cropped_elevation.height / resampled_elevation.shape[-2])
 
-        resampled_meta = croped_elevation.meta
+        resampled_meta = cropped_elevation.meta
         resampled_meta.update({
             'height': resampled_elevation.shape[-2],
             'width': resampled_elevation.shape[-1],
@@ -138,24 +137,24 @@ def blank_raster(extent_shapefile=''):
 #################################################
 
 
-# def standard_idw(lon, lat, elev, longs, lats, elevs, d_values, id_power, p_degree, s_radious):
-def standard_idw(lon, lat, longs, lats, d_values, id_power, s_radious):
-    """regression_idw is responsible for mathmatic calculation of idw interpolation with regression as a covariable."""
+# def standard_idw(lon, lat, elev, longs, lats, elevs, d_values, id_power, p_degree, s_radius):
+def standard_idw(lon, lat, longs, lats, d_values, id_power, s_radius):
+    """regression_idw is responsible for mathematic calculation of IDW interpolation with regression as a covariable."""
     calc_arr = np.zeros(shape=( len(longs), 6))  # create an empty array shape of (total no. of observation * 6)
     calc_arr[:, 0] = longs  # First column will be Longitude of known data points.
     calc_arr[:, 1] = lats  # Second column will be Latitude of known data points.
     #     calc_arr[:, 2] = elevs    # Third column will be Elevation of known data points.
     calc_arr[:, 3] = d_values  # Fourth column will be Observed data value of known data points.
 
-    # Fifth column is weight value from idw formula " w = 1 / (d(x, x_i)^power + 1)"
+    # Fifth column is weight value from IDW formula `w = 1 / (d(x, x_i)^power + 1)`
     # >> constant 1 is to prevent int divide by zero when distance is zero.
     calc_arr[:, 4] = 1 / (np.sqrt((calc_arr[:, 0] - lon)**2 + (calc_arr[:, 1] - lat)**2)**id_power + 1)
 
-    # Sort the array in ascendin order based on column_5 (weight) "np.argsort(calc_arr[:,4])"
-    # and exclude all the rows outside of search radious "[ - s_radious :, :]"
-    calc_arr = calc_arr[np.argsort(calc_arr[:, 4])][-s_radious:, :]
+    # Sort the array in ascending order based on column_5 (weight) `np.argsort(calc_arr[:,4])`
+    # and exclude all the rows outside of search radius `[ - s_radius :, :]`
+    calc_arr = calc_arr[np.argsort(calc_arr[:, 4])][-s_radius:, :]
 
-    # Sixth column is multiplicative product of inverse distant weight and actual value.
+    # Sixth column is the multiplicative product of inverse distance weight and actual value.
     calc_arr[:, 5] = calc_arr[:, 3] * calc_arr[:, 4]
     # Divide sum of weighted value vy sum of weights to get IDW interpolation.
     idw = calc_arr[:, 5].sum() / calc_arr[:, 4].sum()
@@ -169,7 +168,7 @@ def idw_interpolation(input_point_shapefile='',
                       extent_shapefile='',
                       column_name='',
                       power=2,
-                      search_radious=4,
+                      search_radius=4,
                       output_resolution=250):
     blank_raster(extent_shapefile)
     
@@ -208,7 +207,7 @@ def idw_interpolation(input_point_shapefile='',
                         lats=obser_df.lat_index,
                         d_values=obser_df.data_value,
                         id_power=power,
-                        s_radious=search_radious)
+                        s_radius=search_radius)
 
         output_filename = input_point_shapefile.rsplit('.', 1)[0] + '_idw.tif'
         with rasterio.open(output_filename, 'w', **baseRasterFile.meta) as std_idw:
@@ -224,7 +223,7 @@ def accuracy_standard_idw(input_point_shapefile='',
                           extent_shapefile='',
                           column_name='',
                           power=2,
-                          search_radious=4,
+                          search_radius=4,
                           output_resolution=250):
     blank_raster(extent_shapefile)
     
@@ -262,7 +261,7 @@ def accuracy_standard_idw(input_point_shapefile='',
                 lats=train_df.lat_index,
                 d_values=train_df.data_value,
                 id_power=power,
-                s_radious=search_radious)
+                s_radius=search_radius)
         return obser_df.data_value.to_list(), obser_df.predicted.to_list()
 
 
@@ -270,8 +269,8 @@ def accuracy_standard_idw(input_point_shapefile='',
 
 
 def regression_idw(lon, lat, elev, longs, lats, elevs, d_values, id_power,
-                   p_degree, s_radious, x_max, x_min):
-    """regression_idw is responsible for mathmatic calculation of idw interpolation with regression as a covariable."""
+                   p_degree, s_radius, x_max, x_min):
+    """regression_idw is responsible for mathematic calculation of idw interpolation with regression as a covariable."""
     calc_arr = np.zeros(shape=(len(longs), 6))  # create an empty array shape of (total no. of observation * 6)
     calc_arr[:, 0] = longs  # First column will be Longitude of known data points.
     calc_arr[:, 1] = lats  # Second column will be Latitude of known data points.
@@ -282,9 +281,9 @@ def regression_idw(lon, lat, elev, longs, lats, elevs, d_values, id_power,
     # >> constant 1 is to prevent int divide by zero when distance is zero.
     calc_arr[:, 4] = 1 / (np.sqrt((calc_arr[:, 0] - lon)**2 + (calc_arr[:, 1] - lat)**2)**id_power + 1)
 
-    # Sort the array in ascendin order based on column_5 (weight) "np.argsort(calc_arr[:,4])"
-    # and exclude all the rows outside of search radious "[ - s_radious :, :]"
-    calc_arr = calc_arr[np.argsort(calc_arr[:, 4])][-s_radious:, :]
+    # Sort the array in ascending order based on column_5 (weight) "np.argsort(calc_arr[:,4])"
+    # and exclude all the rows outside of search radius "[ - s_radius :, :]"
+    calc_arr = calc_arr[np.argsort(calc_arr[:, 4])][-s_radius:, :]
 
     # Sixth column is multiplicative product of inverse distant weight and actual value.
     calc_arr[:, 5] = calc_arr[:, 3] * calc_arr[:, 4]
@@ -332,14 +331,14 @@ def regression_idw_interpolation(input_point_shapefile='',
                                  column_name='',
                                  power=2,
                                  polynomial_degree=1,
-                                 search_radious=4,
+                                 search_radius=4,
                                  output_resolution=250):
 
     crop_resize(input_raster_filename=input_raster_file,
                 extent_shapefile_name=extent_shapefile,
                 max_height_or_width=output_resolution)
 
-    metStat = gpd.read_file(input_point_shapefile)  # metStat stands for meteoriological stations.
+    metStat = gpd.read_file(input_point_shapefile)  # metStat stands for meteorological stations.
 
     resampled_filename = input_raster_file.rsplit('.', 1)[0] + '_resized.tif'
 
@@ -379,7 +378,7 @@ def regression_idw_interpolation(input_point_shapefile='',
                         d_values=obser_df.data_value,
                         id_power=power,
                         p_degree=polynomial_degree,
-                        s_radious=search_radious,
+                        s_radius=search_radius,
                         x_max=upper_range,
                         x_min=lower_range)
 
@@ -399,14 +398,14 @@ def accuracy_regression_idw(input_point_shapefile='',
                             column_name='',
                             power=2,
                             polynomial_degree=1,
-                            search_radious=4,
+                            search_radius=4,
                             output_resolution=250):
 
     crop_resize(input_raster_filename=input_raster_file,
                 extent_shapefile_name=extent_shapefile,
                 max_height_or_width=output_resolution)
 
-    metStat = gpd.read_file(input_point_shapefile)  # metStat stands for meteoriological stations.
+    metStat = gpd.read_file(input_point_shapefile)  # metStat stands for meteorological stations.
 
     resampled_filename = input_raster_file.rsplit('.', 1)[0] + '_resized.tif'
 
@@ -443,7 +442,7 @@ def accuracy_regression_idw(input_point_shapefile='',
                 d_values=train_df.data_value,
                 id_power=power,
                 p_degree=polynomial_degree,
-                s_radious=search_radious,
+                s_radius=search_radius,
                 x_max=upper_range,
                 x_min=lower_range)
 
