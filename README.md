@@ -1,6 +1,8 @@
-> # **Please Note:** This library was created as a thesis project and it is no longer maintained by its author. 
-
 # All in one IDW package for python
+
+This is a fork of this library: https://github.com/yahyatamim/pyidw since that library is no longer maintained.
+
+
 > **This is an example map created using the pyidw library.**
 > ![idw interpolated map using pyidw](https://github.com/yahyatamim/pyidw/blob/master/images/output_map.png?raw=true)
 
