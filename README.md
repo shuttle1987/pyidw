@@ -77,24 +77,24 @@ idw.idw_interpolation(
     extent_shapefile="Bangladesh_Border.shp",
     column_name="Max_Temp",
     power=2,
-    search_radious=4,
+    search_radius=4,
     output_resolution=250,
 )
 ```
-It will take a few seconds to complete, then a map image like below will be shown. And a new file will be created namely ***Bangladesh_Temperature_idw.tif***, this is the saved raster file of the interpolated map. This file is named after input_point_shapefile name with ***\_idw.tif*** suffix. **idw_interpolation()** function take six parameters. 
+It will take a few seconds to complete, then a map image like below will be shown. And a new file will be created namely ***Bangladesh_Temperature_idw.tif***, this is the saved raster file of the interpolated map. This file is named after `input_point_shapefile` name with ***\_idw.tif*** suffix.`idw_interpolation()` function take six parameters. 
 
-- The first parameter ***input_point_shapefile=*** take an ESRI point shapefile which should contain the particular data value we are interested to create an interpolation map. Also, there shouldn't be any value outside of our given extent_shapefile area. 
-- The second parameter ***extent_shapefile=*** take an ESRI polygon shapefile, this shapefile is used for defining the calculation and mapping boundary. The coordinate system of extent_shapefile should be the same as input_point_shapefile.
-- The third parameter ***column_name=*** take the column name of a particular field as a string. This is the value upon which the IDW map will be created.
-- The fourth parameter ***power=*** is an optional parameter with a default value of 2, this is the power parameter from [idw equation](https://en.wikipedia.org/wiki/Inverse_distance_weighting#:~:text=A%20general%20form,the%20power%20parameter.).
-- The fifth parameter ***search_radious=*** is also an optional parameter with a default value of 4, it determines how many nearest points will be used for idw calculation.
-- The sixth parameter ***output_resolution=*** is also optional with default value of 250. This parameter defines the maximum height or width (which one is higher) of the resulting ***\_idw.tif*** file in pixel.
+- The first parameter `input_point_shapefile=` takes an ESRI point shapefile which should contain the particular data value we are interested to create an interpolation map. Also, there shouldn't be any value outside of our given extent_shapefile area. 
+- The second parameter `extent_shapefile=` take an ESRI polygon shapefile, this shapefile is used for defining the calculation and mapping boundary. The coordinate system of `extent_shapefile` should be the same as `input_point_shapefile`.
+- The third parameter `column_name=` take the column name of a particular field as a string. This is the value upon which the IDW map will be created.
+- The fourth parameter `power=` is an optional parameter with a default value of 2, this is the power parameter from [idw equation](https://en.wikipedia.org/wiki/Inverse_distance_weighting#:~:text=A%20general%20form,the%20power%20parameter.).
+- The fifth parameter `search_radius=` is also an optional parameter with a default value of 4, it determines how many nearest points will be used for idw calculation.
+- The sixth parameter `output_resolution=` is also optional with default value of 250. This parameter defines the maximum height or width (which one is higher) of the resulting ***\_idw.tif*** file in pixel.
 >   ![Standard idw interpolated map](https://github.com/yahyatamim/pyidw/raw/master/images/standard_idw_interpolated_map.png)
 
-> Output map  from **idw_interpolation()** function. 
+> Output map from **idw_interpolation()** function. 
 ---
 ### accuracy_standard_idw()
-If you are interested in accuracy assessment of your interpolation then you could use **accuracy_standard_idw()** function from **pyidw** which take 6 parameters same as **idw_interpolation()** function. But instead of creating a idw interpolated map, the **accuracy_standard_idw()** function return tow python list. The first one contains actual data values from the input shapefile and the second list contains the interpolated values for those data points using [LeaveOneOut](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneOut.html#sklearn.model_selection.LeaveOneOut) cross-validation method. Then you could compare them to obtain your desired accuracy score. An example code for **accuracy_standard_idw()** function is given below.
+If you are interested in accuracy assessment of your interpolation then you could use `accuracy_standard_idw()` function from **pyidw** which take 6 parameters same as `idw_interpolation()` function. But instead of creating a idw interpolated map, the `accuracy_standard_idw()` function returns tow python list. The first one contains actual data values from the input shapefile and the second list contains the interpolated values for those data points using [LeaveOneOut](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneOut.html#sklearn.model_selection.LeaveOneOut) cross-validation method. Then you could compare them to obtain your desired accuracy score. An example code for `accuracy_standard_idw()` function is given below.
  
 ```python
 from pyidw import idw
@@ -114,14 +114,15 @@ print("RMSE:", mean_squared_error(original_value, interpolated_value, squared=Fa
 > Output: `RMSE: 1.401379`
 ---
 ## show_map()
-We have also implemented a raster visualization function named **show_map()**. This function incorporates easy map visualization with a built-in colour bar and coordinate tick marks. It takes 4 parameters.
+We have also implemented a raster visualization function named `show_map()`. This function incorporates easy map visualization with a built-in colour bar and coordinate tick marks. It takes 4 parameters.
 
- - ***input_raster=***  take raster file name as argument. 
- - ***colormap=*** is an optional parameter which take [matplotlib colormaps](https://matplotlib.org/stable/tutorials/colors/colormaps.html)  parameter. By changing this, you can easily alter the looks of your map image. 
- - ***image_size=*** is also an optional parameter with a default value set to 1.5 which you can change to make your resulting image larger or smaller.
- - The last parameter ***return_figure=*** is for those people who wish to alter the resulting image to their liking. by default it is set to false and **show_map()** function won't return anything other than showing the map on the screen. If set to true, then **show_map()** function will return figure, axes and color_bar to the user. We will see a detailed example of this in the next section.
+ - `input_raster=`  take raster file name as argument. 
+ - `colormap=` is an optional parameter which takes [matplotlib colormaps](https://matplotlib.org/stable/tutorials/colors/colormaps.html) as a parameter. By changing this, you can easily alter the looks of your map image. 
+ - `image_size=` is also an optional parameter with a default value set to 1.5 which you can change to make your resulting image larger or smaller.
+ - The last parameter `return_figure=` is for those people who wish to alter the resulting image to their liking. by default it is set to `False` and the `show_map()` function returns `None` and shows the map on the screen. If set to `True`, then `show_map()` function will return a tuple of (figure, axes, color_bar) to the user. We will see a detailed example of this in the next section.
 
-Here is an example code of **show_map()** function.
+Here is an example code of `show_map()` function.
+
 ```python
 from pyidw import idw
 
@@ -134,7 +135,7 @@ show_map(
 ```
 > ![Show_map() function example image](https://github.com/yahyatamim/pyidw/raw/master/images/show_map_example.png)
 
-Below is an example code of setting ***return_figure=*** to **True** and adding some extra elements to the map 🗺 image.
+Below is an example code of setting `return_figure=True` and adding some extra elements to the map 🗺 image.
 ```python
 from pyidw import idw
 from matplotlib import pyplot as plt
@@ -154,7 +155,8 @@ plt.show()
 > ![show_map() example with axis label](https://github.com/yahyatamim/pyidw/raw/master/images/show_map_example_with_axis_label.png)
 ---
 ## regression_idw_interpolation()
-This function is quite different than regular IDW interpolation as it incorporates external raster covariable, polynomial regression and r_squared value. This is an experimental method and we don't recommend using it as it doesn't always produce reliable output and accuracy score are also lower than regular idw interpolation. It take same parameters as ***idw_interpolation()*** function only with 2 extra parameters namely ***input_raster_file=*** which is the raster covariable.  input_raster file should be larger than ***extent_shapefile***. The other parameter is ***polynomial_degre=*** with a default value set to 1 which would define the [polynomial regression equation](https://numpy.org/doc/stable/reference/generated/numpy.polyfit.html).  An example code for ***regression_idw_interpolation()*** is given below.
+This function is quite different than regular IDW interpolation as it incorporates external raster covariable, polynomial regression and r_squared value. This is an experimental method and we don't recommend using it as it doesn't always produce reliable output and accuracy score are also lower than regular IDW interpolation. It take same parameters as `idw_interpolation()` function only with 2 extra parameters namely `input_raster_file=` which is the raster covariable.  input_raster file should be larger than `extent_shapefile`. The other parameter is `polynomial_degree=` with a default value set to 1 which would define the [polynomial regression equation](https://numpy.org/doc/stable/reference/generated/numpy.polyfit.html).  An example code for `regression_idw_interpolation()` is given below:
+
 ```python
 from pyidw import idw
 
@@ -172,7 +174,7 @@ idw.regression_idw_interpolation(
 > ![Polynomial regression idw interpolation](https://github.com/yahyatamim/pyidw/raw/master/images/regression_idw.png)
 ---
 ## accuracy_regression_idw()
-This function is similar to **accuracy_standard_idw()**  function. An example code is given below.
+This function is similar to **accuracy_standard_idw()**  function. An example code is given below:
 
 ```python
 from pyidw import idw
