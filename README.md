@@ -105,7 +105,7 @@ original_value, interpolated_value = idw.accuracy_standard_idw(
     extent_shapefile="Bangladesh_Border.shp",
     column_name="Max_Temp",
     power=2,
-    search_radious=6,
+    search_radius=6,
     output_resolution=250,
 )
 
@@ -167,7 +167,7 @@ idw.regression_idw_interpolation(
     column_name="Min_Temp",
     power=2,
     polynomial_degree=1,
-    search_radious=5,
+    search_radius=5,
     output_resolution=250,
 )
 ```
@@ -187,7 +187,7 @@ original_value, interpolated_value = idw.accuracy_regression_idw(
     column_name="Min_Temp",
     power=2,
     polynomial_degree=1,
-    search_radious=5,
+    search_radius=5,
     output_resolution=250,
 )
 
