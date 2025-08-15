@@ -15,11 +15,11 @@ from rasterio.mask import mask
 from rasterio.plot import show
 from rasterio.crs import CRS
 from rasterio.transform import from_bounds
-import fiona
+#import fiona
 from rasterio.enums import Resampling
 from sklearn.metrics import r2_score
 from sklearn.model_selection import LeaveOneOut
-from matplotlib import colors
+#from matplotlib import colors
 
 
 def show_map(input_raster='', colormap='coolwarm', image_size=1.5, return_figure=False):
