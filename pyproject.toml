@@ -1,0 +1,15 @@
+[project]
+name = "pyidw"
+version = "0.3.0"
+description = "IDW interpolation library for python"
+readme = "README.md"
+authors = [
+    { name = "Md. Yahya Tamim", email = "yahyatamim0@email.com" }
+    { name = "Janis Lesinskis", email = "consulting@lesinskis.com" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[build-system]
+requires = ["uv_build>=0.8.9,<0.9.0"]
+build-backend = "uv_build"
