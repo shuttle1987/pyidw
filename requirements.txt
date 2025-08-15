@@ -1,7 +1,0 @@
-numpy
-matplotlib
-pandas
-geopandas
-rasterio
-fiona
-sklearn
