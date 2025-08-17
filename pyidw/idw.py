@@ -22,7 +22,8 @@ from sklearn.model_selection import LeaveOneOut
 #from matplotlib import colors
 
 
-def show_map(input_raster='', colormap='coolwarm', image_size=1.5, return_figure=False):
+def show_map(input_raster='', colormap: str = 'coolwarm', image_size: float = 1.5, return_figure: bool = False):
+    """Legacy function to show a map or potentially return it based on the `return_figure` parameter"""
     with rasterio.open(input_raster) as image_data:
         my_matrix = image_data.read(1)
         my_matrix = np.ma.masked_where(my_matrix == 32767, my_matrix)
@@ -167,9 +168,9 @@ def standard_idw(lon, lat, longs, lats, d_values, id_power, s_radius):
 def idw_interpolation(input_point_shapefile='',
                       extent_shapefile='',
                       column_name='',
-                      power=2,
-                      search_radius=4,
-                      output_resolution=250):
+                      power: int = 2,
+                      search_radius: int = 1,
+                      output_resolution: int = 250):
     blank_raster(extent_shapefile)
     
     blank_filename = extent_shapefile.rsplit('.', 1)[0] + '_blank.tif'
@@ -222,9 +223,9 @@ def idw_interpolation(input_point_shapefile='',
 def accuracy_standard_idw(input_point_shapefile='',
                           extent_shapefile='',
                           column_name='',
-                          power=2,
-                          search_radius=4,
-                          output_resolution=250):
+                          power: int = 2,
+                          search_radius: int = 1,
+                          output_resolution: int = 250):
     blank_raster(extent_shapefile)
     
     blank_filename = extent_shapefile.rsplit('.', 1)[0] + '_blank.tif'
@@ -329,10 +330,10 @@ def regression_idw_interpolation(input_point_shapefile='',
                                  input_raster_file='',
                                  extent_shapefile='',
                                  column_name='',
-                                 power=2,
-                                 polynomial_degree=1,
-                                 search_radius=4,
-                                 output_resolution=250):
+                                 power: int = 2,
+                                 polynomial_degree: int = 1,
+                                 search_radius: int = 1,
+                                 output_resolution: int = 250):
 
     crop_resize(input_raster_filename=input_raster_file,
                 extent_shapefile_name=extent_shapefile,
@@ -396,10 +397,10 @@ def accuracy_regression_idw(input_point_shapefile='',
                             input_raster_file='',
                             extent_shapefile='',
                             column_name='',
-                            power=2,
-                            polynomial_degree=1,
-                            search_radius=4,
-                            output_resolution=250):
+                            power: int = 2,
+                            polynomial_degree: int = 1,
+                            search_radius: int = 1,
+                            output_resolution: int = 250):
 
     crop_resize(input_raster_filename=input_raster_file,
                 extent_shapefile_name=extent_shapefile,
