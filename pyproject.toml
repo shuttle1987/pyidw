@@ -21,5 +21,6 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "pylint>=3.3.8",
     "pytest>=8.4.1",
 ]
