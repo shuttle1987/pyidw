@@ -21,23 +21,12 @@ pyidw package also incorporates a clever technique to use additional raster data
 ---
 
 ## Installation
-**pyidw** library can be installed using a simple `pip install pyidw` command. However, if you are facing trouble installing **pyidw** on your windows machine, please try the commands below on the windows command line. 
 
-    pip install wheel
-    pip install pipwin
-    pipwin refresh
-    pipwin install numpy
-    pipwin install pandas
-    pipwin install shapely
-    pipwin install gdal
-    pipwin install fiona
-    pipwin install pyproj
-    pipwin install six
-    pipwin install rtree
-    pipwin install geopandas
-    pipwin install rasterio
-    pip install pyidw
-    pipwin refresh
+If you would like to install the most recent version of this package from Github:
+
+```sh
+uv pip install "git+https://github.com/shuttle1987/pyidw"
+```
 
 ---
 ## Example
