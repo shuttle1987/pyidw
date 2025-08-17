@@ -13,7 +13,7 @@ import geopandas as gpd
 import rasterio
 from rasterio.mask import mask
 from rasterio.plot import show
-from rasterio.crs import CRS
+from rasterio.crs import CRS # pylint: disable=no-name-in-module
 from rasterio.transform import from_bounds
 #import fiona
 from rasterio.enums import Resampling
