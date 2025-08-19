@@ -57,7 +57,7 @@ The ***Bangladesh_Border.shp*** is an ESRI polygon shapefile that covers all the
 
 ---
 ### idw_interpolation()
-Now the fun part begins. Write these few lines of code from below in any python interpreter while you are on **pyidw_example** directory.
+Now the fun part begins. Write these few lines of code from below in any Python interpreter while you your current working directory is the pyidw `example` directory.
 ```python
 from pyidw import idw
 
