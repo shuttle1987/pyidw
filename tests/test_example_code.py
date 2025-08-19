@@ -13,4 +13,5 @@ def test_interpolation_regression(pytestconfig):
         power=2,
         search_radius=10,
         output_resolution=250,
+        show_map=False,
     )
