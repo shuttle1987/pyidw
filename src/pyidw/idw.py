@@ -170,7 +170,15 @@ def idw_interpolation(input_point_shapefile='',
                       column_name='',
                       power: int = 2,
                       search_radius: int = 1,
-                      output_resolution: int = 250):
+                      output_resolution: int = 250,
+                      *,
+                      render_map=True):
+    """
+    Perform an interpolation of the data in the shapefile and extent using `column_name` to specify
+    which column the data to be interpolated resides.
+
+    render_map: toggle for rendering the the map, defaults as True
+    """
     blank_raster(extent_shapefile)
     
     blank_filename = extent_shapefile.rsplit('.', 1)[0] + '_blank.tif'
@@ -214,7 +222,8 @@ def idw_interpolation(input_point_shapefile='',
         with rasterio.open(output_filename, 'w', **baseRasterFile.meta) as std_idw:
             std_idw.write(idw_array, 1)
 
-        show_map(output_filename)
+        if render_map:
+            show_map(output_filename)
 
 
 #################################################
