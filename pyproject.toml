@@ -1,6 +1,6 @@
 [project]
 name = "pyidw"
-version = "0.3.1"
+version = "0.3.2"
 description = "IDW interpolation library for python"
 readme = "README.md"
 authors = [
