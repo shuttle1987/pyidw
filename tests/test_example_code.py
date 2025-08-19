@@ -1,9 +1,8 @@
-def test_interpolation_regression():
+def test_interpolation_regression(pytestconfig):
     """This test case is to ensure a type error issue is resolved"""
     from pyidw import idw
 
-    from pathlib import Path
-    example_data_directory = Path("example_data")
+    example_data_directory = pytestconfig.rootdir / "tests" / "example_data"
 
     bangladesh_temperature_file = example_data_directory / "Bangladesh_Temperature.shp"
     bangladesh_extent_file = example_data_directory / "Bangladesh_Border.shp"
