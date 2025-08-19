@@ -38,7 +38,7 @@ def show_map(input_raster='', colormap: str = 'coolwarm', image_size: float = 1.
         fig.set_size_inches(w=width, h=height)
         image = show(image_data, cmap=colormap, ax=ax)
         cbar = fig.colorbar(image_hidden, ax=ax, pad=0.02)
-        if return_figure == False:
+        if not return_figure:
             plt.show()
         else:
             return fig, ax, cbar
