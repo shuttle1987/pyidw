@@ -517,10 +517,15 @@ def accuracy_regression_idw(
         lons, lats = re_elevation.index(
             [lon for lon in metStat.geometry.x], [lat for lat in metStat.geometry.y]
         )
+
+        # convert from floats to integers so these can be used as indexes into the rasterio array
+        lons_ints = lons.astype(np.int64)
+        lats_ints = lats.astype(np.int64)
+
         obser_df["lon_index"] = lons
         obser_df["lat_index"] = lats
         obser_df["elevation"] = re_elevation.read(1)[
-            lons, lats
+            lons_ints, lats_ints
         ]  # read elevation data for each station.
         obser_df["data_value"] = metStat[column_name]
         obser_df["predicted"] = 0.0
