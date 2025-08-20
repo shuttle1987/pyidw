@@ -37,3 +37,24 @@ def test_futurewarning_idw_interpolation(pytestconfig):
         output_resolution=250,
         render_map=False,
     )
+
+def test_index_error_bug(pytestconfig):
+    """This code caused an IndexError to be raised after updating various underlying dependencies.
+    
+    This test case serves as a regression test for that"""
+    from pyidw import idw
+
+    example_data_directory = pytestconfig.rootdir / "tests" / "example_data"
+
+    bangladesh_temperature_file = example_data_directory / "Bangladesh_Temperature.shp"
+    bangladesh_extent_file = example_data_directory / "Bangladesh_Border.shp"
+
+    idw.regression_idw_interpolation(
+        input_point_shapefile=str(bangladesh_temperature_file),
+        extent_shapefile=str(bangladesh_extent_file),
+        column_name="Min_Temp",
+        power=2,
+        polynomial_degree=1,
+        search_radius=5,
+        output_resolution=250,
+    )
