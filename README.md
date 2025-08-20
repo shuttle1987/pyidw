@@ -87,7 +87,7 @@ If you are interested in accuracy assessment of your interpolation then you coul
  
 ```python
 from pyidw import idw
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import root_mean_squared_error
 
 original_value, interpolated_value = idw.accuracy_standard_idw(
     input_point_shapefile="Bangladesh_Temperature.shp",
@@ -98,7 +98,7 @@ original_value, interpolated_value = idw.accuracy_standard_idw(
     output_resolution=250,
 )
 
-print("RMSE:", mean_squared_error(original_value, interpolated_value, squared=False))
+print("RMSE:", root_mean_squared_error(original_value, interpolated_value)
 ```
 > Output: `RMSE: 1.401379`
 ---
@@ -167,7 +167,7 @@ This function is similar to **accuracy_standard_idw()**  function. An example co
 
 ```python
 from pyidw import idw
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import root_mean_squared_error
 
 original_value, interpolated_value = idw.accuracy_regression_idw(
     input_point_shapefile="Bangladesh_Temperature.shp",
@@ -180,7 +180,7 @@ original_value, interpolated_value = idw.accuracy_regression_idw(
     output_resolution=250,
 )
 
-print("RMSE:", mean_squared_error(original_value, interpolated_value, squared=False))
+print("RMSE:", root_mean_squared_error(original_value, interpolated_value))
 ```
 > Output: `RMSE: 1.086343`
 ---
