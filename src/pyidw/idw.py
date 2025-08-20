@@ -407,6 +407,8 @@ def regression_idw_interpolation(
     polynomial_degree: int = 1,
     search_radius: int = 1,
     output_resolution: int = 250,
+    *,
+    render_map=True,
 ):
     crop_resize(
         input_raster_filename=input_raster_file,
@@ -429,11 +431,18 @@ def regression_idw_interpolation(
         lons, lats = re_elevation.index(
             [lon for lon in metStat.geometry.x], [lat for lat in metStat.geometry.y]
         )
+
+        # convert from floats to integers so these can be used as indexes into the rasterio array
+        lons_ints = lons.astype(np.int64)
+        lats_ints = lats.astype(np.int64)
+
+        e = re_elevation.read(1)[
+            lons_ints, lats_ints
+        ]  # read elevation data for each station.
+
         obser_df["lon_index"] = lons
         obser_df["lat_index"] = lats
-        obser_df["elevation"] = re_elevation.read(1)[
-            lons, lats
-        ]  # read elevation data for each station.
+        obser_df["elevation"] = e
         obser_df["data_value"] = metStat[column_name]
         obser_df["predicted"] = 0.0
 
@@ -470,7 +479,8 @@ def regression_idw_interpolation(
         with rasterio.open(output_filename, "w", **re_elevation.meta) as reg_idw:
             reg_idw.write(regression_idw_array, 1)
 
-        show_map(output_filename)
+        if render_map:
+            show_map(output_filename)
 
 
 #################################################
