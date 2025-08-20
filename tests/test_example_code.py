@@ -59,4 +59,5 @@ def test_index_error_bug(pytestconfig):
         polynomial_degree=1,
         search_radius=5,
         output_resolution=250,
+        render_map=False,
     )

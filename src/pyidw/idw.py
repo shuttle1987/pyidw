@@ -407,6 +407,8 @@ def regression_idw_interpolation(
     polynomial_degree: int = 1,
     search_radius: int = 1,
     output_resolution: int = 250,
+    *,
+    render_map=True,
 ):
     crop_resize(
         input_raster_filename=input_raster_file,
@@ -477,7 +479,8 @@ def regression_idw_interpolation(
         with rasterio.open(output_filename, "w", **re_elevation.meta) as reg_idw:
             reg_idw.write(regression_idw_array, 1)
 
-        show_map(output_filename)
+        if render_map:
+            show_map(output_filename)
 
 
 #################################################
