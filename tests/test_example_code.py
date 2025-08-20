@@ -48,9 +48,11 @@ def test_index_error_bug(pytestconfig):
 
     bangladesh_temperature_file = example_data_directory / "Bangladesh_Temperature.shp"
     bangladesh_extent_file = example_data_directory / "Bangladesh_Border.shp"
+    elevation_input_raster_filename = example_data_directory / "Bangladesh_Elevation.tiff"
 
     idw.regression_idw_interpolation(
         input_point_shapefile=str(bangladesh_temperature_file),
+        input_raster_file=str(elevation_input_raster_filename),
         extent_shapefile=str(bangladesh_extent_file),
         column_name="Min_Temp",
         power=2,
